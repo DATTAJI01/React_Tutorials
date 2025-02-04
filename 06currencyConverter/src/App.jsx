@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import {InputBox} from './components/index.js'
 import useCurrencyInfo from './hooks/useCurrencyInfo'
 import './App.css'
@@ -7,18 +7,19 @@ function App() {
   //const [count, setCount] = useState(0)
 
   const [amount,setAmount] = useState(0)
-  const [from,setFrom] = useState("usd")
-  const [to,setTo] = useState("inr")
+  const [from,setFrom] = useState("USD")
+  const [to,setTo] = useState("INR")
   const [convertedAmount,setConvertedAmount] = useState(0)
 
 
-  const CurrencyInfo = useCurrencyInfo(from)
+  const CurrencyInfo = useCurrencyInfo(from);
 
-  const options  = Object.keys(CurrencyInfo)
+  const options  = Object.keys(CurrencyInfo);
 
   const swap = () => {
-    setFrom(to)
-    setTo(from)
+    setFrom(to);
+    setTo(from);
+
     setConvertedAmount(amount)
     setAmount(convertedAmount)
   }
@@ -27,13 +28,18 @@ function App() {
     setConvertedAmount(amount * CurrencyInfo[to])
   }
 
+  useEffect(() => {
+    convert();
+  }, [amount, from, to, CurrencyInfo]);
+  
+
   return (
     <div
-        className="w-full h-screen flex flex-wrap justify-center items-center bg-cover bg-no-repeat"
+        className="flex flex-wrap items-center justify-center w-full h-screen bg-no-repeat bg-cover"
         
     >
         <div className="w-full">
-            <div className="w-full max-w-md mx-auto border border-gray-60 rounded-lg p-5 backdrop-blur-sm bg-white/30">
+            <div className="w-full max-w-md p-5 mx-auto border rounded-lg border-gray-60 backdrop-blur-sm bg-white/30">
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
@@ -56,7 +62,7 @@ function App() {
                             className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 border-2 border-white rounded-md bg-blue-600 text-white px-2 py-0.5"
                             onClick={swap}
                         >
-                            swap
+                            Swap
                         </button>
                     </div>
                     <div className="w-full mt-1 mb-4">
@@ -70,7 +76,7 @@ function App() {
                             amountDisable
                         />
                     </div>
-                    <button type="submit" className="w-full bg-blue-600 text-white px-4 py-3 rounded-lg">
+                    <button type="submit" className="w-full px-4 py-3 text-white bg-blue-600 rounded-lg">
                         Convert {from.toUpperCase()} to {to.toUpperCase()}
                     </button>
                 </form>
